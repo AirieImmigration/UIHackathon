@@ -39,7 +39,7 @@ export function ImmigrationTimeline({ persona, goal }: ImmigrationTimelineProps)
 
   return (
     <div className="w-full max-w-4xl mx-auto p-6">
-      <h2 className="text-2xl font-semibold mb-8 text-center">Your Immigration Journey</h2>
+      <h2 className="text-2xl font-semibold mb-12 text-center">Your Immigration Journey</h2>
       
       <div className="relative">
         {/* Timeline line */}
