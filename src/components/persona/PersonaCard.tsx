@@ -60,7 +60,7 @@ export function PersonaCard({ persona, title, className }: PersonaCardProps) {
         </div>
         {persona.currentVisaSlug && (
           <div>
-            <p className="text-sm font-medium">Current Visa</p>
+            <p className="text-sm font-medium">First Visa</p>
             <p className="text-sm text-muted-foreground">
               {persona.currentVisaSlug === "outside-nz" ? "Outside New Zealand" : persona.currentVisaSlug.replace("-", " ").replace(/\b\w/g, l => l.toUpperCase())}
             </p>
