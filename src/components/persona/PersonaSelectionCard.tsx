@@ -1,0 +1,60 @@
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import type { Persona } from "@/config/personas";
+
+interface PersonaSelectionCardProps {
+  persona?: Persona;
+  title: string;
+  description: string;
+  onSelect: () => void;
+  isStartFromScratch?: boolean;
+}
+
+export function PersonaSelectionCard({ 
+  persona, 
+  title, 
+  description, 
+  onSelect, 
+  isStartFromScratch = false 
+}: PersonaSelectionCardProps) {
+  return (
+    <Card className="rounded-2xl shadow-[var(--shadow-soft)] hover:shadow-[var(--shadow-glow)] transition-all cursor-pointer group">
+      <CardHeader className="pb-4">
+        <div className="flex items-center gap-3">
+          <Avatar className="h-12 w-12 bg-primary text-primary-foreground">
+            <AvatarFallback>
+              {isStartFromScratch ? "+" : persona?.name[0]}
+            </AvatarFallback>
+          </Avatar>
+          <div>
+            <CardTitle className="text-lg">{title}</CardTitle>
+            <p className="text-sm text-muted-foreground">
+              {persona ? `${persona.age} • ${persona.country} • ${persona.currentJobTitle}` : description}
+            </p>
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent className="pt-0">
+        {persona && (
+          <div className="space-y-2 mb-4">
+            <p className="text-sm text-muted-foreground">
+              Goal: {persona.goal.summary}
+            </p>
+            {persona.currentVisaSlug && (
+              <p className="text-xs text-muted-foreground">
+                Current visa: {persona.currentVisaSlug === "outside-nz" ? "Outside New Zealand" : persona.currentVisaSlug.replace("-", " ").replace(/\b\w/g, l => l.toUpperCase())}
+              </p>
+            )}
+          </div>
+        )}
+        <Button 
+          onClick={onSelect}
+          className="w-full group-hover:bg-primary/90"
+        >
+          {isStartFromScratch ? "Start Fresh" : "Choose This Persona"}
+        </Button>
+      </CardContent>
+    </Card>
+  );
+}
