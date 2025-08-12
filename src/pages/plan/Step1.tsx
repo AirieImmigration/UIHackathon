@@ -194,7 +194,12 @@ export default function Step1() {
                 </p>
 
                 <div className="grid gap-4">
-                  {Object.values(personas).map((persona) => (
+                  {[
+                    // Jack(s) first
+                    ...Object.values(personas).filter(p => p.name === "Jack"),
+                    // then everyone else, preserving order
+                    ...Object.values(personas).filter(p => p.name !== "Jack"),
+                  ].map((persona) => (
                     <PersonaSelectionCard
                       key={persona.slug}
                       persona={persona}
@@ -211,6 +216,7 @@ export default function Step1() {
                     isStartFromScratch
                   />
                 </div>
+
               </div>
             )}
 
