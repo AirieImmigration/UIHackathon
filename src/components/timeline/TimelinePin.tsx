@@ -8,74 +8,29 @@ interface TimelinePinProps {
   delay?: number; // animation delay in ms
 }
 
-// export function TimelinePin({ name, type, position, delay = 0 }: TimelinePinProps) {
-//   return (
-//     <div 
-//       className="absolute -top-16 transform -translate-x-1/2 -translate-y-full"
-//       style={{ 
-//         left: `${(position / 4) * 100}%`,
-//         animationDelay: `${delay}ms`
-//       }}
-//     >
-//       <div className="animate-pin-drop">
-//         <Avatar className={cn(
-//           "h-10 w-10 border-2 border-background shadow-lg",
-//           type === "persona" ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground"
-//         )}>
-//           <AvatarFallback>{name[0]}</AvatarFallback>
-//         </Avatar>
-//         <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2">
-//           <div className={cn(
-//             "px-2 py-1 rounded text-xs whitespace-nowrap",
-//             type === "persona" ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground"
-//           )}>
-//             {type === "persona" ? "The Now" : "The Goal"}
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-
 export function TimelinePin({ name, type, position, delay = 0 }: TimelinePinProps) {
-  // timeline has 5 stages: 0..4 (center is 2)
-  const pct = (position / 4) * 100;
-  const sign = position < 2 ? -1 : position > 2 ? 1 : 0; // left = -, right = +
-  const xBump = -110; // px to push away from center
-
   return (
-    <div
-      className="absolute -top-16 transform -translate-x-1/2 -translate-y-full"
-      style={{
-        left: `calc(${pct}% + ${sign * xBump}px)`,
-        animationDelay: `${delay}ms`,
+    <div 
+      className="absolute top-0 transform -translate-x-1/2 -translate-y-full"
+      style={{ 
+        left: `${(position / 4) * 100}%`,
+        animationDelay: `${delay}ms`
       }}
     >
       <div className="animate-pin-drop">
-        <Avatar
-          className={cn(
-            "h-10 w-10 border-2 border-background shadow-lg",
-            type === "persona"
-              ? "bg-primary text-primary-foreground"
-              : "bg-secondary text-secondary-foreground"
-          )}
-        >
-          <AvatarFallback>{name[0]}</AvatarFallback>
-        </Avatar>
-
-        <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2">
-          <div
-            className={cn(
-              "px-2 py-1 rounded text-xs whitespace-nowrap",
-              type === "persona"
-                ? "bg-primary text-primary-foreground"
-                : "bg-secondary text-secondary-foreground"
-            )}
-          >
+        <div className={cn(
+          "h-10 w-10 border-2 border-background shadow-lg rounded-full flex items-center justify-center text-xl",
+          type === "persona" ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground"
+        )}>
+          {type === "persona" ? "👤" : "🚀"}
+        </div>
+        <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2">
+          <div className={cn(
+            "px-2 py-1 rounded text-xs whitespace-nowrap",
+            type === "persona" ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground"
+          )}>
             {type === "persona" ? "The Now" : "The Goal"}
           </div>
-
         </div>
       </div>
     </div>

@@ -14,7 +14,14 @@ import { personas } from "@/config/personas";
 import type { Persona } from "@/config/personas";
 import CallingAI from "@/tools/CallingAI";
 
-type Step = "selection" | "persona-chat" | "persona-complete" | "goal-chat" | "complete";
+type Step =
+  | "selection"
+  | "persona-chat"
+  | "persona-complete"
+  | "goal-chat"
+  | "complete";
+
+type PersonDetails = "employmenttype" | "age" | "origin";
 
 export default function Step1() {
   usePageSEO({
@@ -28,6 +35,8 @@ export default function Step1() {
   const [selectedPersona, setSelectedPersona] = useState<Persona | undefined>();
   const [goal, setGoal] = useState<string>("");
   const [isGoalComplete, setIsGoalComplete] = useState(false);
+  const [chatCount, setChatCount] = useState<number>(0);
+  const [hasAge, setAge] = useState(false);
 
   const {
     messages: personaMessages,
@@ -35,10 +44,12 @@ export default function Step1() {
     isComplete: isPersonaComplete,
     completionPercentage,
     processUserResponse: processPersonaResponse,
-    startFlow: startPersonaFlow
+    startFlow: startPersonaFlow,
   } = useChatFlow(selectedPersona);
 
-  const [goalMessages, setGoalMessages] = useState<Array<{id: string; content: string; isBot: boolean}>>([]);
+  const [goalMessages, setGoalMessages] = useState<
+    Array<{ id: string; content: string; isBot: boolean }>
+  >([]);
 
   useEffect(() => {
     const existingState = planStore.getState();
@@ -65,9 +76,9 @@ export default function Step1() {
         yearsExperience: chatPersona.yearsExperience || 0,
         currentJobTitle: chatPersona.currentJobTitle || "",
         currentVisaSlug: chatPersona.currentVisaSlug || "visitor",
-        goal: { summary: "To be determined" }
+        goal: { summary: "To be determined" },
       };
-      
+
       planStore.setPersona(fullPersona);
       setSelectedPersona(fullPersona);
       setTimeout(() => setStep("persona-complete"), 1000);
@@ -98,35 +109,63 @@ export default function Step1() {
     setGoalMessages([
       {
         id: "goal-welcome",
-        content: "Great! Now let's talk about your goal. What do you want to achieve in New Zealand?",
-        isBot: true
-      }
+        content:
+          "Great! Now let's talk about your goal. What do you want to achieve in New Zealand?",
+        isBot: true,
+      },
     ]);
   };
 
   const handleGoalResponse = async (response: string) => {
-    setGoalMessages(prev => [...prev, 
-      { id: Date.now().toString(), content: response, isBot: false }
+    setGoalMessages((prev) => [
+      ...prev,
+      { id: Date.now().toString(), content: response, isBot: false },
     ]);
-    
+
     setGoal(response);
 
     // Call the AI service to process the goal
-    const reply = await CallingAI(response, "Check that this question is only related to employment in New Zealand from overseas. "  
-      +"If not please return a response to say you can only respond to employment related questions with a view to migrating to New Zealand. "
-      +"If it is relevant then ask the person for any further informatiomn related to age, employment type and country of origin.")
-    
+    const reply = await CallingAI(
+      response,
+      "Check that this question is only related to seeking employment in New Zealand from someone overseas. " +
+        "If not please return a response to say you can only respond to employment related questions with a view to migrating to New Zealand. " +
+        "If the response is relevant then return the best ANSCO match and check for the following information: age and country of origin." +
+        "If any of those fields are missing then ask for them in the response."
+    );
+    const newInterval = chatCount + 1;
+    setChatCount(newInterval);
+    console.log(newInterval);
+    // const checkResponse = reply;
+    // const checkReplyAge = await CallingAI(
+    //   response,
+    //   "Check this message for age.  If there is an age return the number, it not return the number 0."
+    // );
+    // const checkReplyEmployment = await CallingAI(
+    //   response,
+    //   "Check this message for area of skills or employment.  If there is an area of skills or employment return the value and ANSCO code, it not return the string 'NULL'."
+    // );
 
-    // planStore.setGoal({ summary: response });
-    
+    planStore.setGoal({
+      summary: "Go to New Zealand and find employment as a software engineer.",
+    });
+
     // This is where the reply happens
     setTimeout(() => {
-      setGoalMessages(prev => [...prev, {
-        id: (Date.now() + 1).toString(),
-        content: reply,
-        isBot: true
-      }]);
-      setIsGoalComplete(true);
+      setGoalMessages((prev) => [
+        ...prev,
+        {
+          id: (Date.now() + 1).toString(),
+          content: reply,
+          isBot: true,
+        },
+      ]);
+      if (newInterval > 1) {
+        setIsGoalComplete(true);
+        setTimeout(() => {
+          setStep("complete");
+        }, 1500);
+      }
+      //setIsGoalComplete(true);
 
       // When the step is set to complete, then the journey view comes in and end the chat
       // setTimeout(() => setStep("complete"), 1000);
@@ -134,6 +173,8 @@ export default function Step1() {
   };
 
   const handleViewJourney = () => {
+    console.log("moving");
+
     navigate("/plan/step-2");
   };
 
@@ -142,12 +183,16 @@ export default function Step1() {
       <div className="max-w-2xl mx-auto">
         <Card className="rounded-2xl shadow-[var(--shadow-soft)]">
           <CardContent className="p-8">
-            <h1 className="text-2xl md:text-3xl font-semibold mb-6">Step 1 — Persona & Goal</h1>
+            <h1 className="text-2xl md:text-3xl font-semibold mb-6">
+              Step 1 — Persona & Goal
+            </h1>
 
             {step === "selection" && (
               <div className="space-y-6">
-                <p className="text-muted-foreground">Choose a persona to get started, or create your own profile.</p>
-                
+                <p className="text-muted-foreground">
+                  Choose a persona to get started, or create your own profile.
+                </p>
+
                 <div className="grid gap-4">
                   {Object.values(personas).map((persona) => (
                     <PersonaSelectionCard
@@ -158,7 +203,7 @@ export default function Step1() {
                       onSelect={() => handlePersonaSelection(persona)}
                     />
                   ))}
-                  
+
                   <PersonaSelectionCard
                     title="Start from scratch"
                     description="Tell us about your unique situation"
@@ -173,9 +218,11 @@ export default function Step1() {
               <div className="space-y-4">
                 <div className="flex items-center gap-4 mb-6">
                   <Progress value={completionPercentage} className="flex-1" />
-                  <span className="text-sm text-muted-foreground">{completionPercentage}%</span>
+                  <span className="text-sm text-muted-foreground">
+                    {completionPercentage}%
+                  </span>
                 </div>
-                
+
                 <div className="max-h-96 overflow-y-auto space-y-4 mb-4">
                   {personaMessages.map((message) => (
                     <ChatBubble
@@ -185,7 +232,7 @@ export default function Step1() {
                     />
                   ))}
                 </div>
-                
+
                 <ChatInput
                   onSend={processPersonaResponse}
                   placeholder="Type your answer..."
@@ -198,7 +245,7 @@ export default function Step1() {
               <div className="space-y-6">
                 <div className="flex justify-between items-start mb-4">
                   <h2 className="text-lg font-semibold">Your Profile</h2>
-                  <Button 
+                  <Button
                     onClick={handleEditPersona}
                     variant="outline"
                     size="sm"
@@ -206,12 +253,12 @@ export default function Step1() {
                     Edit
                   </Button>
                 </div>
-                <PersonaCard 
-                  persona={selectedPersona} 
-                  title="The Now" 
+                <PersonaCard
+                  persona={selectedPersona}
+                  title="The Now"
                   className="animate-fade-in"
                 />
-                <Button 
+                <Button
                   onClick={handleStartGoalCapture}
                   className="w-full"
                   variant="hero"
@@ -232,7 +279,7 @@ export default function Step1() {
                     />
                   ))}
                 </div>
-                
+
                 <ChatInput
                   onSend={handleGoalResponse}
                   placeholder="Describe your goal..."
@@ -245,7 +292,7 @@ export default function Step1() {
               <div className="space-y-6">
                 <div className="flex justify-between items-start mb-4">
                   <h2 className="text-lg font-semibold">Your Profile</h2>
-                  <Button 
+                  <Button
                     onClick={handleEditPersona}
                     variant="outline"
                     size="sm"
@@ -253,12 +300,12 @@ export default function Step1() {
                     Edit
                   </Button>
                 </div>
-                <PersonaCard 
-                  persona={selectedPersona} 
-                  title="The Now" 
+                <PersonaCard
+                  persona={selectedPersona}
+                  title="The Now"
                   className="animate-fade-in"
                 />
-                
+
                 <Card className="rounded-2xl bg-accent animate-fade-in">
                   <CardContent className="p-6">
                     <div className="flex justify-between items-start">
@@ -266,7 +313,7 @@ export default function Step1() {
                         <h3 className="font-semibold mb-2">The Goal</h3>
                         <p className="text-sm text-muted-foreground">{goal}</p>
                       </div>
-                      <Button 
+                      <Button
                         onClick={() => setStep("goal-chat")}
                         variant="outline"
                         size="sm"
@@ -276,8 +323,8 @@ export default function Step1() {
                     </div>
                   </CardContent>
                 </Card>
-                
-                <Button 
+
+                <Button
                   onClick={handleViewJourney}
                   className="w-full"
                   variant="hero"

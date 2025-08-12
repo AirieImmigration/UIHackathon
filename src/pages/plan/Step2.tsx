@@ -57,7 +57,7 @@ export default function Step2() {
       <div className="max-w-4xl mx-auto">
         <Card className="rounded-2xl shadow-[var(--shadow-soft)] mb-8">
           <CardContent className="p-8">
-            <h1 className="text-2xl md:text-3xl font-semibold mb-2 text-center">Step 2 — Timeline Stocktake</h1>
+            <h1 className="text-2xl md:text-3xl font-semibold mb-2 text-center">Step 2: From here to there 🏎️</h1>
             <p className="text-muted-foreground text-center mb-8">
               See where you are now and where you want to be on your immigration journey.
             </p>

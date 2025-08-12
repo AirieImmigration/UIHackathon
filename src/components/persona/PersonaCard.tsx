@@ -14,9 +14,9 @@ export function PersonaCard({ persona, title, className }: PersonaCardProps) {
     <Card className={`rounded-2xl shadow-[var(--shadow-soft)] ${className || ""}`}>
       <CardHeader className="pb-4">
         <div className="flex items-center gap-3">
-          <Avatar className="h-12 w-12 bg-primary text-primary-foreground">
-            <AvatarFallback>{persona.name[0]}</AvatarFallback>
-          </Avatar>
+          <div className="h-12 w-12 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-xl">
+            👤
+          </div>
           <div>
             <CardTitle className="text-lg">{title}</CardTitle>
             <p className="text-sm text-muted-foreground">{persona.name}</p>
@@ -25,14 +25,20 @@ export function PersonaCard({ persona, title, className }: PersonaCardProps) {
       </CardHeader>
       <CardContent className="space-y-3">
         <div className="flex flex-wrap gap-2">
-          <Badge variant="secondary">{persona.age} years old</Badge>
-          <Badge variant="secondary">{persona.country}</Badge>
-          <Badge variant="secondary">{persona.englishLevel}</Badge>
+          <Badge variant="secondary">Age: {persona.age}</Badge>
+          <Badge variant="secondary">Country: {persona.country}</Badge>
+          <Badge variant="secondary">English Level: {persona.englishLevel}</Badge>
         </div>
         <div>
           <p className="text-sm font-medium">Current Role</p>
           <p className="text-sm text-muted-foreground">{persona.currentJobTitle}</p>
         </div>
+        {persona.jobDescription && (
+          <div>
+            <p className="text-sm font-medium">Job Description</p>
+            <p className="text-sm text-muted-foreground">{persona.jobDescription}</p>
+          </div>
+        )}
         <div>
           <p className="text-sm font-medium">Experience</p>
           <p className="text-sm text-muted-foreground">{persona.yearsExperience} years</p>
