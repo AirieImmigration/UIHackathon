@@ -1,4 +1,4 @@
-export type PersonaSlug = "susan" | "michael" | "jack";
+export type PersonaSlug = "susan" | "michael" | "tan";
 
 export type Persona = {
   slug: PersonaSlug | "custom";
@@ -75,8 +75,8 @@ export const personas: Record<PersonaSlug, Persona> = {
   //     targetVisaSlug: "student-visa",
   //   },
   // },
-  jack: {
-    slug: "jack",
+  tan: {
+    slug: "tan",
     name: "Tan",
     age: 23,
     country: "Vietnam",
@@ -84,7 +84,7 @@ export const personas: Record<PersonaSlug, Persona> = {
     educationLevel: "bachelor",
     yearsExperience: 2,
     currentJobTitle: "Software Developer",
-    currentVisaSlug: "Outside New Zealand",
+    currentVisaSlug: "Vietnam Working Holiday Visa",
     hourlyRateNZD: 30,
     yearlySalaryNZD: 0,
     attributes: { nzQualification: false },
