@@ -12,6 +12,7 @@ import { usePageSEO } from "@/hooks/usePageSEO";
 import { planStore } from "@/lib/planStore";
 import { personas } from "@/config/personas";
 import type { Persona } from "@/config/personas";
+import CallingAI from "@/tools/CallingAI";
 
 type Step = "selection" | "persona-chat" | "persona-complete" | "goal-chat" | "complete";
 
@@ -103,22 +104,32 @@ export default function Step1() {
     ]);
   };
 
-  const handleGoalResponse = (response: string) => {
+  const handleGoalResponse = async (response: string) => {
     setGoalMessages(prev => [...prev, 
       { id: Date.now().toString(), content: response, isBot: false }
     ]);
     
     setGoal(response);
-    planStore.setGoal({ summary: response });
+
+    // Call the AI service to process the goal
+    const reply = await CallingAI(response, "Check that this question is only related to employment in New Zealand from overseas. "  
+      +"If not please return a response to say you can only respond to employment related questions with a view to migrating to New Zealand. "
+      +"If it is relevant then ask the person for any further informatiomn related to age, employment type and country of origin.")
     
+
+    // planStore.setGoal({ summary: response });
+    
+    // This is where the reply happens
     setTimeout(() => {
       setGoalMessages(prev => [...prev, {
         id: (Date.now() + 1).toString(),
-        content: "Perfect! I've captured your goal. You're ready to see your journey timeline.",
+        content: reply,
         isBot: true
       }]);
       setIsGoalComplete(true);
-      setTimeout(() => setStep("complete"), 1000);
+
+      // When the step is set to complete, then the journey view comes in and end the chat
+      // setTimeout(() => setStep("complete"), 1000);
     }, 500);
   };
 
