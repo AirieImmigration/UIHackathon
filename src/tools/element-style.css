@@ -1,0 +1,14 @@
+/* One-line gadget layout */
+#google_translate_element .goog-te-gadget {
+  @apply inline-flex items-center gap-2;
+}
+
+/* Style the select box */
+#google_translate_element select.goog-te-combo {
+  @apply rounded-lg border-2 font-semibold px-3 py-2;
+}
+
+/* Optional: focus styles */
+#google_translate_element select.goog-te-combo:focus {
+  @apply ring-2 ring-offset-1 outline-none;
+}

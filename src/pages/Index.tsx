@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
+import GoogleTranslate from "@/tools/GoogleTranslate";
 
 const Index = () => {
   useEffect(() => {
@@ -24,6 +25,12 @@ const Index = () => {
               <Link to="/plan/step-2">View timeline</Link>
             </Button>
           </div>
+
+          <div className="mt-4">
+            <GoogleTranslate />
+          </div>
+
+
         </CardContent>
       </Card>
     </main>
