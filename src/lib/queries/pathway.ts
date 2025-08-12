@@ -4,10 +4,12 @@ export type Visa = {
   id: string | number;
   slug: string;
   name: string;
-  description?: string | null;
+  short_description?: string | null;
   stage?: string;
   shortDescription?: string | null;
   iconName?: string | null;
+  type?: string;
+  eligibility_criteria?: string[];
 };
 
 export type PathwayEdge = {
@@ -21,7 +23,7 @@ export type PathwayEdge = {
 export async function getVisas(): Promise<Visa[]> {
   const { data, error } = await supabase
     .from("visas")
-    .select("id, slug, name, description, stage, shortDescription, iconName");
+    .select("id, slug, name, short_description, stage, shortDescription, iconName, type, eligibility_criteria");
   if (error) throw error;
   return (data ?? []) as unknown as Visa[];
 }

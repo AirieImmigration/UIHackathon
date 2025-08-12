@@ -9,6 +9,7 @@ export type Persona = {
   educationLevel: "high_school" | "bachelor" | "master" | "phd";
   yearsExperience: number;
   currentJobTitle?: string;
+  jobDescription?: string;
   currentVisaSlug?: string;
   hourlyRateNZD?: number;
   yearlySalaryNZD?: number;

@@ -19,7 +19,7 @@ export interface Question {
 
 const requiredFields: Array<keyof Persona> = [
   "name", "age", "country", "englishLevel", "educationLevel", 
-  "yearsExperience", "currentJobTitle", "currentVisaSlug"
+  "yearsExperience", "currentJobTitle", "jobDescription", "currentVisaSlug"
 ];
 
 const questions: Question[] = [
@@ -67,6 +67,12 @@ const questions: Question[] = [
     id: "currentJobTitle",
     field: "currentJobTitle",
     question: "What's your current job title?", 
+    type: "text"
+  },
+  {
+    id: "jobDescription",
+    field: "jobDescription",
+    question: "Provide a short description of your job (2-3 sentences)",
     type: "text"
   },
   {
@@ -144,6 +150,23 @@ export function useChatFlow(initialPersona?: Partial<Persona>) {
       ...prev,
       [currentQuestion.field]: value
     }));
+
+    // Handle conditional questions after country
+    if (currentQuestion.field === "country") {
+      if (response.toLowerCase().includes("new zealand")) {
+        // Ask about NZ visa
+        setTimeout(() => {
+          addMessage("What type of visa are you currently on in New Zealand?", true);
+        }, 500);
+        return; // Skip the normal flow
+      } else {
+        // Set as outside NZ automatically
+        setPersona(prev => ({
+          ...prev,
+          currentVisaSlug: "outside-nz"
+        }));
+      }
+    }
 
     // Check if we're done
     const newMissingFields = getMissingFields().filter(field => field !== currentQuestion.field);
