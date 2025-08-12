@@ -196,9 +196,9 @@ export default function Step1() {
                 <div className="grid gap-4">
                   {[
                     // Jack(s) first
-                    ...Object.values(personas).filter(p => p.name === "Jack"),
+                    ...Object.values(personas).filter(p => p.name === "Tan"),
                     // then everyone else, preserving order
-                    ...Object.values(personas).filter(p => p.name !== "Jack"),
+                    ...Object.values(personas).filter(p => p.name !== "Tan"),
                   ].map((persona) => (
                     <PersonaSelectionCard
                       key={persona.slug}
