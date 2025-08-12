@@ -21,9 +21,9 @@ const Index = () => {
                 Start planning
               </Link>
             </Button>
-            <Button asChild variant="outline">
+            {/* <Button asChild variant="outline">
               <Link to="/plan/step-2">View timeline</Link>
-            </Button>
+            </Button> */}
           </div>
 
           <div className="mt-4">
