@@ -15,11 +15,22 @@ export function PersonaCard({ persona, title, className }: PersonaCardProps) {
       <CardHeader className="pb-4">
         <div className="flex items-center gap-3">
           <div className="h-12 w-12 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-xl">
-              <img src='/tan-avatar.jpg' alt={persona.name} className="h-10 w-10 rounded-full" />
+
+            {persona?.name === "Tan" ? (
+              <img
+                src='/tan-avatar.jpg' 
+                alt="Tan"
+                className="h-10 w-10 rounded-full"
+              />
+            ) : (
+              <span role="img" aria-label="user">👤</span>
+            )}
+
+            
           </div>
           <div>
             <CardTitle className="text-lg">{title}</CardTitle>
-            <p className="text-sm text-muted-foreground">Tan</p>
+            <p className="text-sm text-muted-foreground">{persona.name}</p>
           </div>
         </div>
       </CardHeader>
@@ -31,16 +42,12 @@ export function PersonaCard({ persona, title, className }: PersonaCardProps) {
         </div>
         <div>
           <p className="text-sm font-medium">Current Role</p>
-          {/* <p className="text-sm text-muted-foreground">{persona.currentJobTitle}</p> */}
-          <p className="text-sm text-muted-foreground">Software Developer</p>
-
+          <p className="text-sm text-muted-foreground">{persona.currentJobTitle}</p>
         </div>
         {persona.jobDescription && (
           <div>
             <p className="text-sm font-medium">Job Description</p>
-            {/* <p className="text-sm text-muted-foreground">{persona.jobDescription}</p> */}
-            <p className="text-sm text-muted-foreground">Software Developer</p>
-
+            <p className="text-sm text-muted-foreground">{persona.jobDescription}</p>
           </div>
         )}
         <div>
@@ -55,8 +62,7 @@ export function PersonaCard({ persona, title, className }: PersonaCardProps) {
           <div>
             <p className="text-sm font-medium">Current Visa</p>
             <p className="text-sm text-muted-foreground">
-              {/* {persona.currentVisaSlug === "outside-nz" ? "Outside New Zealand" : persona.currentVisaSlug.replace("-", " ").replace(/\b\w/g, l => l.toUpperCase())} */}
-              Outside New Zealand
+              {persona.currentVisaSlug === "outside-nz" ? "Outside New Zealand" : persona.currentVisaSlug.replace("-", " ").replace(/\b\w/g, l => l.toUpperCase())}
             </p>
           </div>
         )}
